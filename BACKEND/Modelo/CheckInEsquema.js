@@ -15,7 +15,7 @@ const schemaCheckin = new Schema ({
   }
 });
 
-module.exports = mongoose.model("ModeloCheckin", schemaCheckin);
+module.exports = mongoose.model("ModeloCheckin", schemaCheckin, "CHECK-IN");
 
 
 

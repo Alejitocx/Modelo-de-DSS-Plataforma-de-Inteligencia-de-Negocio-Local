@@ -26,11 +26,26 @@ app.use("/checkin", rutaCheckIn);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Conexión a MongoDB
+if (!process.env.MONGO_URI) {
+  console.error("❌ MONGO_URI no está definido. Configura la variable de entorno en tu .env");
+  process.exit(1);
+}
+
+console.log(`Intentando conectar a MongoDB -> ${process.env.MONGO_URI}`);
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log("✅ Conectado a MongoDB"))
+.then(async () => {
+  console.log("✅ Conectado a MongoDB");
+  try {
+    const db = mongoose.connection.db;
+    const collections = await db.listCollections().toArray();
+    console.log("Colecciones disponibles:", collections.map(c => c.name));
+  } catch (e) {
+    console.warn("No se pudieron listar colecciones:", e.message);
+  }
+})
 .catch(err => console.error("❌ Error al conectar a MongoDB:", err));
 
 const port = process.env.PORT || 4000; // 👈 ahora PORT con mayúsculas

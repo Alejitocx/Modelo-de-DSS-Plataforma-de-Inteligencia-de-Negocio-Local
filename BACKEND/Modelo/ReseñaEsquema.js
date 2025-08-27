@@ -43,4 +43,4 @@ const schemaReseñas = new Schema ({
     requiered: true,
   }
 });
-module.exports= mongoose.model("modeloReseña",schemaReseñas);
+module.exports= mongoose.model("modeloReseña",schemaReseñas, "Reseñas");

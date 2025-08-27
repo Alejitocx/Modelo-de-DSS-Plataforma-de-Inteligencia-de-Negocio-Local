@@ -63,4 +63,4 @@ const schemaNegocios = new Schema ({
     requiered: true,
   }
 });
-module.exports= mongoose.model("ModeloNegocios", schemaNegocios);
+module.exports= mongoose.model("ModeloNegocios", schemaNegocios, "Negocios");
