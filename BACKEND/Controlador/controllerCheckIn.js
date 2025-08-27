@@ -1,4 +1,3 @@
-
 const ModeloCheckin = require('../Modelo/CheckInEsquema');
 
 exports.crearCheckIn = async (req, res) => {
@@ -11,7 +10,6 @@ exports.crearCheckIn = async (req, res) => {
   }
 };
 
-
 exports.obtenerCheckIn = async (req, res) => {
   try {
     const lista = await ModeloCheckin.find();
@@ -20,7 +18,6 @@ exports.obtenerCheckIn = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 exports.obtenerCheckinPorId = async (req, res) => {
   try {
