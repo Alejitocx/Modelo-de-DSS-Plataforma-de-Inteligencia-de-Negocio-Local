@@ -26,4 +26,4 @@ const schemaUsuario = new mongoose.Schema({
   compliment_writer: { type: Number, default: 0 },
   compliment_photos: { type: Number, default: 0 },
 });
-module.exports= mongoose.model("modeloUsuario",schemaUsuario);
+module.exports= mongoose.model("modeloUsuario",schemaUsuario, "Usuario");
