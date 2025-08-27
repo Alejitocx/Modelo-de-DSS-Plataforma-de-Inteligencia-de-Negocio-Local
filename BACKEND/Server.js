@@ -9,6 +9,9 @@ const rutaReseña = require("./Rutas/rutaReseña.js");
 const rutaTip = require("./Rutas/rutaTip.js");
 const rutaUsuario = require("./Rutas/rutaUsuario");
 
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -19,6 +22,8 @@ app.use("/reseñas", rutaReseña);
 app.use("/tips", rutaTip);
 app.use("/usuarios", rutaUsuario);
 app.use("/checkin", rutaCheckIn);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGO_URI, {
