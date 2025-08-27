@@ -1,4 +1,4 @@
-const modeloReseña = require("/Modelo/ReseñaEsquema");
+const modeloReseña = require("../Modelo/ReseñaEsquema");
 
 // Crear reseña
 exports.crearReseña = async (req, res) => {

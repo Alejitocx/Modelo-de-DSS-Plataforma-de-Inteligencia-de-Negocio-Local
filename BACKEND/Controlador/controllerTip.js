@@ -1,4 +1,4 @@
-const modeloTip = require("/Modelo/TipEsquema");
+const modeloTip = require("../Modelo/TipEsquema");
 
 
 exports.crearTip = async (req, res) => {

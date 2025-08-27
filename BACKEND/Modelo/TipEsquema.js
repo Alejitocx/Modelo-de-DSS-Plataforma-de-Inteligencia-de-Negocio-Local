@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const schemaTip = new Schema ({
    _id:   { type: String }, 
    user_id: { 

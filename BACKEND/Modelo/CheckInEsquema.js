@@ -1,7 +1,7 @@
 
 const mongoose = require ("mongoose");
 
-
+const Schema = mongoose.Schema;
 const schemaCheckin = new Schema ({
   _id:  { type: String }, 
   business_id:{

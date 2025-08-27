@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const controllerReseña = require("/Controlador/controllerReseña");
+const controllerReseña = require("../Controlador/controllerReseña");
 
 router.post("/reseñas", controllerReseña.crearReseña);
 router.get("/reseñas", controllerReseña.obtenerReseñas);

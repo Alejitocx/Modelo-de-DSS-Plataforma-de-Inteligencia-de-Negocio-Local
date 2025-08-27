@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const controllerTip = require("/Controlador/controllerTip");
+const controllerTip = require("../Controlador/controllerTip");
 
 router.post("/tips", controllerTip.crearTip);
 router.get("/tips", controllerTip.obtenerTips);

@@ -1,4 +1,4 @@
-const ModeloCheckin = require("/Modelo/CheckInEsquema");
+const ModeloCheckin = require('../Modelo/CheckInEsquema');
 
 exports.crearCheckIn = async (req, res) => {
   try {
