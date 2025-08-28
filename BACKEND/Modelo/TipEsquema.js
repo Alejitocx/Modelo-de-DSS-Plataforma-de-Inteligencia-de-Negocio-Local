@@ -1,21 +1,29 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const schemaTip = new Schema ({
-   _id:   { type: String }, 
-   user_id: { 
+
+  user_id: { 
     type: String,
-     required: true },      
-  business_id: 
-  { type: String, 
-    required: true },  
+    required: true 
+  },      
+  business_id: { 
+    type: String, 
+    required: true 
+  },  
   text: { 
     type: String, 
-    required: true },        
+    required: true 
+  },
+
   date: { 
-    type: Date, 
-    required: true },           
+    type: String, 
+    required: true 
+  },           
   compliment_count: { 
     type: Number, 
-    default: 0 },
+    default: 0 
+  },
 });
-module.exports= mongoose.model("modeloTip",schemaTip);
+
+
+module.exports = mongoose.model("modeloTip", schemaTip, "tips");

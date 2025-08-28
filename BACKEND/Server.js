@@ -2,6 +2,10 @@ const express = require('express');
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
+mongoose.set('debug', true); 
+
 
 const rutaCheckIn = require('./Rutas/rutaCheckIn');
 const rutaNegocio = require("./Rutas/rutaNegocio.js");
@@ -18,22 +22,40 @@ app.use(express.json());
 
 // Rutas
 app.use("/negocios", rutaNegocio);
-app.use("/reseñas", rutaReseña);
+app.use("/resenas", rutaReseña);
 app.use("/tips", rutaTip);
 app.use("/usuarios", rutaUsuario);
 app.use("/checkin", rutaCheckIn);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Conexión a MongoDB
+if (!process.env.MONGO_URI) {
+  console.error("❌ MONGO_URI no está definido. Configura la variable de entorno en tu .env");
+  process.exit(1);
+}
+
+console.log(`Intentando conectar a MongoDB -> ${process.env.MONGO_URI}`);
+
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
-.then(() => console.log("✅ Conectado a MongoDB"))
+
+.then(async () => {
+  console.log("✅ Conectado a MongoDB");
+  try {
+    const db = mongoose.connection.db;
+    const collections = await db.listCollections().toArray();
+    console.log("Colecciones disponibles:", collections.map(c => c.name));
+  } catch (e) {
+    console.warn("No se pudieron listar colecciones:", e.message);
+  }
+})
+
 .catch(err => console.error("❌ Error al conectar a MongoDB:", err));
 
 const port = process.env.PORT || 4000; // 👈 ahora PORT con mayúsculas
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
 });
+
