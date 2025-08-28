@@ -1,66 +1,63 @@
 const mongoose= require("mongoose");
 const Schema = mongoose.Schema;
 
-const schemaNegocios = new Schema ({
-   _id:  { type: String }, 
-   address:{
+const schemaNegocios = new Schema({
+  business_id: {
     type: String,
-   
-  },
-   attributes:{
-    type: String,
-    requiered: true
-  },
-
-  business_id:{
-    type: String,
-    requiered: true,
-    unique: true
-  },
-  categories: {
-    type: String,
-   
-  },
-  city: {
-    type: String,
-   
-  },
-  hours: {
-    type: Object,
-    requiered: true,
-  },
-  is_open: {
-    type: Boolean,
-    requiered: true,
-  },
-  latitude: {
-    type: Number,
-   
-  },
-  longitude: {
-    type: Number,
-   
+    required: true, 
+    unique: true,
+    index: true // Es buena práctica indexar los IDs para búsquedas rápidas
   },
   name: {
     type: String,
-    requiered: true,
+    required: true, 
+  },
+  address: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  state: {
+    type: String,
+    required: true, 
   },
   postal_code: {
     type: String,
-    requiered: true,
+    required: true, 
+  },
+  latitude: {
+    type: Number,
+  },
+  longitude: {
+    type: Number,
+  },
+  stars: {
+    type: Number,
+    min: 0,
+    max: 5,
+    default: 0
   },
   review_count: {
     type: Number,
     default: 0,
   },
-  stars: {
+  //  Number para coincidir con los datos (0 o 1)
+  is_open: {
     type: Number,
-    min: 0,
-    max:5,
+    required: true, 
   },
-  state: {
+  //  Object para que coincida con la base de datos
+  attributes: {
+    type: Object,
+  },
+  categories: {
     type: String,
-    requiered: true,
+  },
+  //  tipo flexible y no requerido, ya que puede ser null
+  hours: {
+    type: Schema.Types.Mixed,
   }
 });
-module.exports= mongoose.model("ModeloNegocios", schemaNegocios);
+
+module.exports = mongoose.model("ModeloNegocios", schemaNegocios, "negocios");
