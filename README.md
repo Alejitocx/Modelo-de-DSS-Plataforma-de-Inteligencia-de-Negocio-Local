@@ -1,56 +1,131 @@
-# DSS - Plataforma de Inteligencia de Negocio Local
+📌 Backend - DSS Plataforma de Inteligencia de Negocio Local
+📖 Descripción
 
-## 📖 Descripción
-Este proyecto es un **Modelo de Sistema de Soporte a Decisiones (DSS)** diseñado para ayudar a dueños de negocios locales a **monitorear y comparar su rendimiento frente a competidores directos** en su misma área y categoría.  
+Este proyecto implementa el backend de un Sistema de Soporte a Decisiones (DSS) orientado a negocios locales.
+Su función principal es manejar la lógica de negocio, almacenar y procesar datos provenientes del Yelp Open Dataset, y exponer una API REST que permite a cualquier cliente (ejemplo: un panel en React) consultar información de forma estructurada.
 
-La plataforma ofrece un **panel de control interactivo** que muestra:
-- 📊 Puntuación promedio de calificación a lo largo del tiempo.  
-- 🗓️ Volumen de reseñas por mes.  
-- ⭐ Distribución de calificaciones (5 estrellas vs 1 estrella).  
-- 🔎 Análisis de atributos del negocio (ej. "ambiente ruidoso" vs "música de ambiente").  
+El backend se construyó con Node.js y Express, se conecta a una base de datos MongoDB y cuenta con documentación Swagger para facilitar su consumo.
 
-De esta manera, los usuarios pueden identificar **fortalezas y debilidades de su negocio** y tomar decisiones estratégicas, como mejorar la calidad de productos o invertir en la experiencia del cliente.  
+Este servidor es el núcleo de la plataforma: recibe peticiones del frontend, consulta datos, ejecuta análisis y devuelve resultados listos para ser visualizados.
 
----
+🎯 Objetivos
 
-## 🎯 Objetivos
-- Proporcionar una herramienta **clara, visualmente atractiva y fácil de usar**.  
-- Incorporar conceptos de **ergonomía, usabilidad y amigabilidad**.  
-- Implementar **metodologías de desarrollo de sistemas de información**, con planificación, documentación y seguimiento adecuado.  
-- Utilizar **estándares de codificación y herramientas de versionamiento** (incluyendo para la base de datos).  
+Exponer una API robusta y clara para que el frontend pueda consumir los datos.
 
----
+Procesar información de negocios, reseñas, usuarios, tips y check-ins.
 
-## ⚙️ Requerimientos Técnicos
-- **Conexión a API** documentada con **Swagger**, para obtener y almacenar información.  
-- **Carga de archivos** con estructura predefinida (ej. `attributes.json`).  
-- Implementación de tres subsistemas:
-  1. **Data Subsystem** → Manejo de la información.  
-  2. **Model Subsystem** → Procesamiento y análisis de datos.  
-  3. **User Interface Subsystem** → Panel interactivo para visualización.  
+Permitir comparación entre competidores y análisis de atributos relevantes.
 
----
+Soportar carga de archivos JSON para alimentar la base de datos.
 
-## 🚫 Exclusiones
-- No se requiere inicio de sesión, autenticación de usuarios ni manejo de roles/perfiles.  
+Servir como capa de integración entre los datos crudos de Yelp y la experiencia visual en React.
 
----
+⚙️ Requerimientos previos
 
-## 📌 Tecnologías y Herramientas
-- **Frontend:** React  
-- **Backend:** Node.js / Express  
-- **Base de Datos:** MongoDB  
-- **Documentación de API:** Swagger  
-- **Control de versiones:** Git + GitHub  
+Antes de instalar, asegúrate de tener:
 
----
+Node.js >= 18
 
-## 📈 Ejemplo de Caso de Uso
-Un dueño de café puede descubrir que sus competidores reciben mejores calificaciones por la **calidad del café**. Gracias al análisis, podrá decidir **invertir en granos de mejor calidad o en capacitación para baristas**.  
+MongoDB instalado localmente o en la nube (Atlas recomendado).
 
----
+Git para clonar el repositorio.
 
-## 📝 Estado del Proyecto
-📌 En desarrollo (MVP).  
+🚀 Instalación y ejecución
 
----
+Clonar el repositorio
+
+git clone https://github.com/usuario/DSS-Local-BI.git
+cd DSS-Local-BI/backend
+
+
+Instalar dependencias
+
+npm install
+
+
+Configurar variables de entorno
+Crear un archivo .env en la carpeta backend/ con:
+
+PORT=4000
+MONGODB_URI=mongodb://localhost:27017/dss-local
+
+
+Ejecutar el servidor
+
+npm run dev
+
+
+Por defecto la API quedará disponible en:
+
+http://localhost:4000/api
+
+📂 Estructura del proyecto
+backend/
+ ├── src/
+ │   ├── models/        # Definición de esquemas Mongoose
+ │   ├── routes/        # Endpoints REST
+ │   ├── controllers/   # Lógica de negocio
+ │   ├── middleware/    # Carga de archivos, validaciones
+ │   └── utils/         # Funciones auxiliares
+ ├── uploads/           # Archivos cargados (JSON)
+ ├── swagger/           # Documentación OpenAPI
+ └── server.js          # Entrada principal
+
+📌 Endpoints principales
+
+La API está documentada en Swagger (disponible en /api-docs). Algunos ejemplos:
+
+👤 User
+
+GET /api/user/{id} → detalle de usuario.
+
+GET /api/user?limit=5 → top usuarios más activos.
+
+📝 Review
+
+GET /api/review/business/{businessId} → listar reseñas de un negocio.
+
+GET /api/review/business/{businessId}/avg → promedio de estrellas.
+
+📌 Business
+
+GET /api/business → lista negocios con filtros (city, category, limit).
+
+GET /api/business/{id} → detalle de un negocio.
+
+💡 Tip
+
+GET /api/tip/business/{businessId} → consejos asociados al negocio.
+
+📈 Modelos de Análisis
+
+POST /api/v1/competitors/compare → comparar negocios.
+
+POST /api/v1/attributes/impact → analizar impacto de atributos.
+
+POST /api/v1/metrics/timeseries → generar series de tiempo.
+
+POST /api/v1/metrics/top → ranking Top-N.
+
+POST /api/v1/metrics/kpi → métricas KPI personalizadas.
+
+📝 Ejemplo de uso con cURL
+
+Promedio de estrellas de un negocio:
+
+curl http://localhost:4000/api/review/business/12345/avg
+
+
+Respuesta:
+
+{
+  "businessId": "12345",
+  "averageStars": 4.5,
+  "totalReviews": 320
+}
+
+✅ Estado
+
+Backend funcional y en desarrollo continuo.
+
+Documentación básica lista en Swagger.
