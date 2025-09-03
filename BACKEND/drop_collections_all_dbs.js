@@ -23,10 +23,10 @@ function normalize(name){
 
     const admin = client.db().admin();
     const dbsInfo = await admin.listDatabases();
-    const databases = dbsInfo.databases.map(d => d.name).filter(n => n !== 'local'); // excluye local usualmente
+    const databases = dbsInfo.databases.map(d => d.name).filter(n => n !== 'local'); 
     console.log('Bases detectadas:', databases);
 
-    const DRY_RUN = true; // cambiar a false para borrar realmente
+    const DRY_RUN = true; 
 
     for (const dbName of databases) {
       const db = client.db(dbName);

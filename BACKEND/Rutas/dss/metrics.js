@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { z } = require('zod');
 const { getCol } = require('./mongo');
+const cors = require('cors'); 
 const { normalizeRange, buckets, label } = require('./time');
 
 const r = Router();
@@ -94,31 +95,46 @@ r.post('/top', async (req, res) => {
   });
 });
 
-r.post('/kpi', async (req, res) => {
-  const schema = z.object({
-    collection: z.string(),
-    op: z.enum(['count', 'sum', 'avg', 'min', 'max']),
-    valueField: z.string().optional(),
-    match: z.record(z.any()).optional(),
-  });
-  const parsed = schema.safeParse(req.body);
-  if (!parsed.success) return res.status(400).json(parsed.error.flatten());
-  const p = parsed.data;
+r.post('/data', async (req, res) => {
+  try {
+    const schema = z.object({
+      collection: z.string(),
+      op: z.enum(['count', 'sum', 'avg', 'min', 'max']),
+      valueField: z.string().optional(),
+      match: z.object({}).passthrough().optional(), 
+    }).refine(data => {
+      return data.op === 'count' || (data.op !== 'count' && data.valueField);
+    }, {
+      message: "El campo 'valueField' es requerido para operaciones como avg, sum, min, max.",
+      path: ["valueField"],
+    });
 
-  const col = getCol(p.collection);
-  const valueExpr =
-    p.op === 'count' ? { $sum: 1 } :
-    p.op === 'sum'   ? { $sum: `$${p.valueField}` } :
-    p.op === 'avg'   ? { $avg: `$${p.valueField}` } :
-    p.op === 'min'   ? { $min: `$${p.valueField}` } :
-                       { $max: `$${p.valueField}` };
+    const parsed = schema.safeParse(req.body);
+    if (!parsed.success) {
+      console.error("Error de validación en /kpi:", parsed.error.flatten());
+      return res.status(400).json(parsed.error.flatten());
+    }
+    const p = parsed.data;
 
-  const [row] = await col.aggregate([
-    { $match: p.match || {} },
-    { $group: { _id: null, value: valueExpr } }
-  ]).toArray();
+    const col = getCol(p.collection);
+    const valueExpr =
+      p.op === 'count' ? { $sum: 1 } :
+      p.op === 'sum'   ? { $sum: `$${p.valueField}` } :
+      p.op === 'avg'   ? { $avg: `$${p.valueField}` } :
+      p.op === 'min'   ? { $min: `$${p.valueField}` } :
+                         { $max: `$${p.valueField}` };
 
-  res.json({ value: row?.value ?? 0 });
+    const [row] = await col.aggregate([
+      { $match: p.match || {} },
+      { $group: { _id: null, value: valueExpr } }
+    ]).toArray();
+
+    res.json({ value: row?.value ?? 0 });
+
+  } catch (error) {
+    console.error(`Error en el endpoint /kpi:`, error);
+    res.status(500).json({ error: "Ocurrió un error interno en el servidor." });
+  }
 });
 
 module.exports = r;
