@@ -1,9 +1,7 @@
-// server.js
 const express = require('express');
+const cors = require('cors'); 
 const mongoose = require("mongoose");
-const cors = require("cors");
 require("dotenv").config();
-
 mongoose.set('debug', true);
 
 const rutaCheckIn = require('./Rutas/rutaCheckIn');
@@ -15,31 +13,31 @@ const rutaUsuario = require("./Rutas/rutaUsuario");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./swagger");
 
-// === DSS: nuevos routers ===
-const dssMetrics = require('./Rutas/dss/metrics');        // /api/v1/metrics
-const dssCompetitors = require('./Rutas/dss/competitors'); // /api/v1/competitors
-const dssAttributes = require('./Rutas/dss/attributes');   // /api/v1/attributes
-const dssAdmin = require('./Rutas/dss/admin');             // /api/v1/admin
-const { dssSpec } = require('./Rutas/dss/openapi');        // merge Swagger
+
+const dssMetrics = require('./Rutas/dss/metrics');        
+const dssCompetitors = require('./Rutas/dss/competitors'); 
+const dssAttributes = require('./Rutas/dss/attributes');   
+const dssAdmin = require('./Rutas/dss/admin');             
+const { dssSpec } = require('./Rutas/dss/openapi');        
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Rutas existentes
+
 app.use("/negocios", rutaNegocio);
 app.use("/resenas", rutaResena);
 app.use("/tips", rutaTip);
 app.use("/usuarios", rutaUsuario);
 app.use("/checkin", rutaCheckIn);
 
-// Rutas DSS nuevas (no rompen lo existente)
+
 app.use('/api/v1/metrics', dssMetrics);
 app.use('/api/v1/competitors', dssCompetitors);
 app.use('/api/v1/attributes', dssAttributes);
 app.use('/api/v1/admin', dssAdmin);
 
-// Swagger: mezcla tu spec con el de DSS
+
 const swaggerMerged = {
   ...swaggerSpec,
   paths: { ...(swaggerSpec.paths || {}), ...(dssSpec.paths || {}) }

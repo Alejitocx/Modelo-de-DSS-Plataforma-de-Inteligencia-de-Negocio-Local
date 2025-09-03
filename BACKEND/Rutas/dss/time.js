@@ -7,7 +7,7 @@ const toZoned = (d) =>
 
 function normalizeRange(from, to) {
   const end = to ? new Date(to) : new Date();
-  const start = from ? new Date(from) : new Date(end.getFullYear(), end.getMonth() - 3, 1);
+  const start = from ? new Date(from) : new Date(end.getFullYear() - 10, end.getMonth(), 1);
   return { start, end };
 }
 
